@@ -4,3 +4,8 @@
 *.jar
 *.war
 *.ear
+
+Triple-android/bin/
+Triple-android/gen/
+Triple-desktop/bin/
+

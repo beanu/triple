@@ -6,11 +6,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.FloatAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.zhaoyunhe.triple.Triple;
 
 public class BottomBoard extends Group {
@@ -21,8 +24,11 @@ public class BottomBoard extends Group {
 	
 	private Label label_timer;
 	private FloatAction floatAction;
+	private SequenceAction timerAction;
 	
-	public BottomBoard(){
+	private Label label_score;
+	
+	public BottomBoard(final IGameControl igameControl){	
 		TextureAtlas atlas=Triple.getAtals();
 		bg=new Image(atlas.findRegion("bottom"));
 		btn_pause_bg=new Image(atlas.findRegion("btn_pause_backgroud"));
@@ -43,28 +49,45 @@ public class BottomBoard extends Group {
 			
 		};
 		label_timer.setPosition(btn_timer_bg.getX()+20, btn_timer_bg.getY()+20);
-		label_timer.addAction(Actions.sequence(floatAction,Actions.run(new Runnable() {
+		timerAction=Actions.sequence(floatAction,Actions.run(new Runnable() {
 			
 			@Override
 			public void run() {
-				//TODO
-				Engine.get().pause();
+				igameControl.endGame();
 			}
-		})));
+		}));
+		this.addAction(timerAction);
+		
+		label_score=new Label("0", new LabelStyle(Engine.resource("gameFont",BitmapFont.class), new Color(0, 1, 0, 1)));
+		label_score.setPosition(200, 20);
+		
+		btn_pause_bg.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				igameControl.pauseGame();
+			}
+			
+		});
 		
 		this.addActor(bg);
 		this.addActor(btn_pause_bg);
 		this.addActor(btn_timer_bg);
 		this.addActor(label_timer);
+		this.addActor(label_score);
 		
 		this.setSize(Engine.getEngineConfig().width, bg.getHeight());
 	}
 
-	@Override
-	public void act(float delta) {
-		// TODO Auto-generated method stub
-		super.act(delta);
+	public void reset(){
+		//TODO this floatAction have error when reset
+		floatAction.reset();
+		floatAction.setValue(floatAction.getStart());
+		floatAction.setDuration(60);
+		this.addAction(timerAction);
 	}
 	
-	
+	public void updateScore(int value){
+		label_score.setText(value+"");
+	}
 }

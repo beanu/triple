@@ -31,7 +31,7 @@ public class TripleDrive implements EngineDrive {
 	@Override
 	public void onResourcesRegister(AliasResourceManager<String> reg) {
 		reg.textureAtlas("atlas", "data/t.atlas");
-		reg.font("gameFont", "data/gwibble.fnt");
+		reg.font("gameFont", "data/kingthings.fnt");
 		
 		reg.sound("cleanup0", "data/sound/cleanup0.mp3");
 		reg.sound("cleanup1", "data/sound/cleanup1.mp3");

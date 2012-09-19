@@ -395,6 +395,22 @@ public class EliminationGroup extends Group {
 		return false;
 	}
 
+	public void reset(){
+		for(int i=0;i<JewelConfig.VERTICAL;i++){
+			for(int j=0;j<JewelConfig.HORIZONTAL;j++){
+				if(jewels[i][j]!=null){
+					jewels[i][j].remove();
+				}
+			}
+		}
+		listTouch.clear();
+		allTripleList.clear();
+		allDoubleList.clear();
+		
+		this.init();
+		checkAllTripleList();
+	}
+	
 	public void toStrings() {
 		System.out.println("|||||||||||||||||||||||||||||||");
 		for (int i = 0; i < 6; i++) {
