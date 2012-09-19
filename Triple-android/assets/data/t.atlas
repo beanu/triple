@@ -1,0 +1,89 @@
+
+t.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+screen
+  rotate: false
+  xy: 0, 417
+  size: 480, 572
+  orig: 480, 572
+  offset: 0, 0
+  index: -1
+bottom
+  rotate: false
+  xy: 0, 289
+  size: 480, 126
+  orig: 480, 126
+  offset: 0, 0
+  index: -1
+timerbar-bg
+  rotate: false
+  xy: 0, 257
+  size: 480, 30
+  orig: 480, 30
+  offset: 0, 0
+  index: -1
+timerbar
+  rotate: false
+  xy: 0, 225
+  size: 480, 30
+  orig: 480, 30
+  offset: 0, 0
+  index: -1
+1
+  rotate: false
+  xy: 0, 150
+  size: 68, 73
+  orig: 68, 73
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 0, 75
+  size: 68, 73
+  orig: 68, 73
+  offset: 0, 0
+  index: -1
+3
+  rotate: false
+  xy: 70, 150
+  size: 68, 73
+  orig: 68, 73
+  offset: 0, 0
+  index: -1
+4
+  rotate: false
+  xy: 0, 0
+  size: 68, 73
+  orig: 68, 73
+  offset: 0, 0
+  index: -1
+5
+  rotate: false
+  xy: 70, 75
+  size: 68, 73
+  orig: 68, 73
+  offset: 0, 0
+  index: -1
+6
+  rotate: false
+  xy: 140, 150
+  size: 68, 73
+  orig: 68, 73
+  offset: 0, 0
+  index: -1
+btn_timer_backgroud
+  rotate: false
+  xy: 210, 164
+  size: 71, 59
+  orig: 71, 59
+  offset: 0, 0
+  index: -1
+btn_pause_backgroud
+  rotate: false
+  xy: 70, 13
+  size: 59, 60
+  orig: 59, 60
+  offset: 0, 0
+  index: -1
