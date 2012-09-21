@@ -21,9 +21,14 @@ public class ScoreBoard extends Stage {
 	private JumpLabel[] score;
 	private MenuGroup menu;
 	private IGameControl igameControl;
+	private IElimination ielimination;
 	
-	public ScoreBoard(IGameControl igame){
-		this.igameControl=igame;
+	//
+	private static final int[] SKILLCOUNT=new int[]{12,9,12,15,15};
+	
+	public ScoreBoard(ScenePlay scene){
+		this.igameControl=scene;
+		this.ielimination=scene;
 		
 		TextureAtlas atlas=Triple.getAtals();
 		bg=new Image(atlas.findRegion("screen"));
@@ -45,31 +50,38 @@ public class ScoreBoard extends Stage {
 		this.getRoot().setY(710);
 	}
 	
-	public void addScore(JewelType type,int count){
-		int value=0;
-		JumpLabel label=null;
-		switch (type) {
-		case shui:
-			label=score[0];
-			break;
-		case huo:
-			label=score[1];
-			break;
-		case mu:
-			label=score[2];
-			break;
-		case guang:
-			label=score[3];
-			break;
-		case an:
-			label=score[4];
-			break;
-		default:
-			break;
+	public void addScore(JewelType type,int count){		
+		
+		for(int i=0;i<JewelType.values().length;i++){
+			if(JewelType.values()[i]==type){
+				int value=Integer.valueOf(score[i].getText().toString());
+				score[i].jump(value, value+count, 0.4f);
+				break;
+			}
 		}
-		value=Integer.valueOf(label.getText().toString());
-		label.jump(value, value+count, 0.4f);
+		
+		for(int i=0;i<JewelType.values().length;i++){
+			if(score[i].compareTo(SKILLCOUNT[i])){
+				ielimination.showSkillName(JewelType.values()[i]);
+				break;
+			}
+		}
 	}
+	
+	public JewelType checkScore(){
+		//check
+		for(int i=0;i<JewelType.values().length;i++){
+			if(score[i].compareTo(SKILLCOUNT[i])){
+				score[i].clearActions();
+				score[i].floatAction.setValue(score[i].floatAction.getEnd()-SKILLCOUNT[i]);
+				score[i].floatAction.setEnd(score[i].floatAction.getEnd()-SKILLCOUNT[i]);
+				score[i].setText((int)score[i].floatAction.getEnd()+"");
+				
+				return JewelType.values()[i];
+			};
+		}
+		return null;
+	} 
 	
 	public void reset(){
 		for(int i=0;i<score.length;i++){
@@ -79,11 +91,12 @@ public class ScoreBoard extends Stage {
 	
 	public void pauseMode(){
 		menu.menu_resume.setVisible(true);
-		menu.menu_score.setPosition(0, 250);
+		menu.menu_score.setVisible(false);
 	}
 	
 	public void gameOverMode(){
 		menu.menu_resume.setVisible(false);
+		menu.menu_score.setVisible(true);
 		menu.menu_score.setPosition(0, 170);
 	}
 	
@@ -97,7 +110,7 @@ public class ScoreBoard extends Stage {
 			floatAction=new FloatAction();
 		}
 		
-		public void jump(float start,float end,float duration){
+		protected void jump(float start,float end,float duration){
 			floatAction.setStart(start);
 			floatAction.setEnd(end);
 			floatAction.setDuration(duration);
@@ -112,8 +125,14 @@ public class ScoreBoard extends Stage {
 			super.act(delta);
 		}
 		
-		public void reset(){
+		protected void reset(){
 			floatAction.setValue(0);
+			floatAction.setEnd(0);
+		}
+		
+		protected boolean compareTo(int value){
+			if(floatAction.getEnd()>=value)return true;
+			else return false;
 		}
 	}
 	

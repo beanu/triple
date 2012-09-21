@@ -13,6 +13,8 @@ public class TripleDrive implements EngineDrive {
 	@Override
 	public EngineOptions onSetupEngine() {
 		final EngineOptions opt = new EngineOptions(new String[] { "data" },480, 800);
+		opt.useGL20 = false;
+		opt.autoResume = true;
 		return opt;
 	}
 
@@ -47,6 +49,9 @@ public class TripleDrive implements EngineDrive {
 		reg.sound("cleanup11", "data/sound/cleanup11.mp3");
 		reg.sound("drop", "data/sound/drop.mp3");
 		reg.sound("speedMode", "data/sound/speedMode.mp3");
+		reg.sound("boom", "data/sound/missile-explosion.wav");
+		
+		reg.music("countdown", "data/music/countdown.mp3");
 	}
 
 }

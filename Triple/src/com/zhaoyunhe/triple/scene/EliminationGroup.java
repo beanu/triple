@@ -60,20 +60,40 @@ public class EliminationGroup extends Group {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				if (pointer == 0) {
-					// Vector2 co = new Vector2(x,y);
-					// screenToStageCoordinates(co);
-					System.out.println("touchDown" + x + ":" + y);
-
-					if (y < 700) {
-						jTouch = (Jewel) hit(x, y, false);
-					}
+					jTouch = (Jewel) hit(x, y, false);
 
 					if (jTouch != null) {
 						jTouch.remove();
 						addActor(jTouch);
-						jTouch.setScale(1.2f);
-						// jewels[jTouch.v][jTouch.h]=null;
-						eliminate(jTouch);
+//						jTouch.setScale(1.2f);
+						
+						JewelType type=iEliminate.checkScoreIfFireSkill();
+						if(null==type){
+							eliminate(jTouch);
+						}else{
+							switch (type) {
+							case shui:
+								iEliminate.effect_eliminate_row(jTouch);
+								clearWithRow(jTouch);
+								break;
+							case huo:
+								iEliminate.effect_boom(jTouch);
+								clearWithBoom(jTouch);
+								// TODO 效果的延时，效果播放过程在是否还要监听用户的点击
+								break;
+							case mu:
+								iEliminate.effect_eliminate_col(jTouch);
+								clearWithCol(jTouch);
+								break;
+							case guang:
+								iEliminate.effect_addTime();
+								eliminate(jTouch);
+								break;
+							case an:
+								break;
+							}
+						}
+						jTouch=null;
 					}
 				}
 
@@ -84,10 +104,10 @@ public class EliminationGroup extends Group {
 			public void touchUp(InputEvent event, float x, float y,
 					int pointer, int button) {
 				if (pointer == 0) {
-					System.out.println("touchUp" + x + ":" + y);
 					if (jTouch != null) {
-						jTouch.setScale(1f);
-						jTouch.refeshPosition();
+//						jTouch.setScale(1f);
+//						jTouch.refeshPosition();
+						jTouch=null;
 					}
 				}
 			}
@@ -203,10 +223,10 @@ public class EliminationGroup extends Group {
 	/**
 	 * 执行消除行为，消除掉符合规则的砖石
 	 */
-	public void eliminate(Jewel jTouch) {
+	private void eliminate(Jewel jewel) {
 		
 		for(ArrayList<Jewel> list:allTripleList){
-			if(list.contains(jTouch)){
+			if(list.contains(jewel)){
 				listTouch.addAll(list);
 			}
 		}
@@ -220,7 +240,6 @@ public class EliminationGroup extends Group {
 			listTouch.clear();
 			//重新检测可以消除的数组
 			this.checkAllTripleList();
-
 		} else {
 			iEliminate.eliminationFail();
 			for (Jewel je : listTouch) {
@@ -395,6 +414,59 @@ public class EliminationGroup extends Group {
 		return false;
 	}
 
+	/**
+	 * 炸弹消除周围的九个Jewel
+	 * @param jewel
+	 */
+	private void clearWithBoom(Jewel jewel){
+		ArrayList<Jewel> list=new ArrayList<Jewel>();
+		int v=jewel.v; int h=jewel.h;
+		for(int i=v-1;i<=v+1;i++){
+			for(int j=h-1;j<=h+1;j++){
+				if(i<JewelConfig.VERTICAL && i>=0 && j<JewelConfig.HORIZONTAL && j>=0){
+					list.add(jewels[i][j]);
+				}
+			}
+		}
+		iEliminate.eliminationOkForSkill(list);
+		this.removeTriple(list);
+		this.refresh(list);
+		this.checkAllTripleList();
+
+	}
+	
+	/**
+	 * 消除一行
+	 * @param jewel
+	 */
+	private void clearWithRow(Jewel jewel){
+		ArrayList<Jewel> list=new ArrayList<Jewel>();
+		int v=jewel.v;
+		for(int j=0;j<JewelConfig.HORIZONTAL;j++){
+			list.add(jewels[v][j]);
+		}
+		iEliminate.eliminationOkForSkill(list);
+		this.removeTriple(list);
+		this.refresh(list);
+		this.checkAllTripleList();
+	}
+	
+	/**
+	 * 消除一列
+	 * @param jewel
+	 */
+	private void clearWithCol(Jewel jewel){
+		ArrayList<Jewel> list=new ArrayList<Jewel>();
+		int h=jewel.h;
+		for(int i=JewelConfig.VERTICAL-1;i>=0;i--){
+			list.add(jewels[i][h]);
+		}
+		iEliminate.eliminationOkForSkill(list);
+		this.removeTriple(list);
+		this.refresh(list);
+		this.checkAllTripleList();
+	}
+	
 	public void reset(){
 		for(int i=0;i<JewelConfig.VERTICAL;i++){
 			for(int j=0;j<JewelConfig.HORIZONTAL;j++){
